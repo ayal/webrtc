@@ -27,6 +27,7 @@ async function makeCall() {
   if (message.message) {
    let data = JSON.parse(message.message);
    if (data.answer) {
+    let answer = JSON.parse(data.answer);
     const remoteDesc = new RTCSessionDescription(data.answer);
     await peerConnection.setRemoteDescription(remoteDesc);
    }
@@ -43,7 +44,8 @@ async function wait() {
   if (message.message) {
    let data = JSON.parse(message.message);
    if (data.offer) {
-    peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+    let offer = JSON.parse(data.offer);
+    peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     signalingChannel.send({ 'answer': answer });
