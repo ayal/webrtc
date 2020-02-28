@@ -24,9 +24,12 @@ const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' 
 async function makeCall() {
  const peerConnection = new RTCPeerConnection(configuration);
  signalingChannel.addEventListener('message', async message => {
-  if (message.answer) {
-   const remoteDesc = new RTCSessionDescription(message.answer);
-   await peerConnection.setRemoteDescription(remoteDesc);
+  if (message.message) {
+   let data = JSON.parse(message.message);
+   if (data.answer) {
+    const remoteDesc = new RTCSessionDescription(data.answer);
+    await peerConnection.setRemoteDescription(remoteDesc);
+   }
   }
  });
  const offer = await peerConnection.createOffer();
@@ -38,11 +41,13 @@ async function wait() {
  const peerConnection = new RTCPeerConnection(configuration);
  signalingChannel.addEventListener('message', async message => {
   if (message.message) {
-   let {offer} = JSON.parse(message.message);
-   peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
-   const answer = await peerConnection.createAnswer();
-   await peerConnection.setLocalDescription(answer);
-   signalingChannel.send({ 'answer': answer });
+   let data = JSON.parse(message.message);
+   if (data.offer) {
+    peerConnection.setRemoteDescription(new RTCSessionDescription(data.offer));
+    const answer = await peerConnection.createAnswer();
+    await peerConnection.setLocalDescription(answer);
+    signalingChannel.send({ 'answer': answer });
+   }
   }
  });
 }
