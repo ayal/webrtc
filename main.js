@@ -83,7 +83,7 @@ async function wait() {
     if (data.iceCandidate) {
      console.log('setting ice');
     let iceCandidate = JSON.parse(data.iceCandidate);
-     await peerConnection.addIceCandidate(iceCandidate);
+     await peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidate));
    }
     }
   }
