@@ -31,14 +31,15 @@ async function makeCall() {
  });
  const offer = await peerConnection.createOffer();
  await peerConnection.setLocalDescription(offer);
- signalingChannel.send({ 'offer': offer });
+ signalingChannel.send({ 'offer': JSON.stringify(offer)});
 }
 
 async function wait() {
  const peerConnection = new RTCPeerConnection(configuration);
  signalingChannel.addEventListener('message', async message => {
   if (message.offer) {
-   peerConnection.setRemoteDescription(new RTCSessionDescription(message.offer));
+   let offer = JSON.parse(message.offer);
+   peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
    const answer = await peerConnection.createAnswer();
    await peerConnection.setLocalDescription(answer);
    signalingChannel.send({ 'answer': answer });
