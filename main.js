@@ -73,22 +73,22 @@ async function wait() {
   if (message.message) {
    let data = JSON.parse(message.message);
    if (data.offer) {
+   console.log('setting offer');
     let offer = JSON.parse(data.offer);
     peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
     signalingChannel.send({ 'answer': JSON.stringify(answer) });
    }
-   if (data.iceCandidate) {
+    if (data.iceCandidate) {
+     console.log('setting ice');
     let iceCandidate = JSON.parse(data.iceCandidate);
      await peerConnection.addIceCandidate(iceCandidate);
-    console.log('added ice to waiter');
    }
+    }
   }
  });
- 
 
-});
 
  
  peerConnection.addEventListener('connectionstatechange', event => {
