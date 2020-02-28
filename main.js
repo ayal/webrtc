@@ -48,7 +48,7 @@ async function wait() {
     peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
     const answer = await peerConnection.createAnswer();
     await peerConnection.setLocalDescription(answer);
-    signalingChannel.send({ 'answer': answer });
+    signalingChannel.send({ 'answer': JSON.stringify(answer) });
    }
   }
  });
