@@ -1,7 +1,7 @@
 class SignalingChannel {
  constructor() {
    this.listeners = [];
-   window.onmessage((event)=>{
+   window.onMessage((event)=>{
     console.log('on message', event);
     for (let listener of this.listeners) {
      listener(event.data);
