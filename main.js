@@ -37,8 +37,8 @@ async function makeCall() {
 async function wait() {
  const peerConnection = new RTCPeerConnection(configuration);
  signalingChannel.addEventListener('message', async message => {
-  if (message.offer) {
-   let offer = JSON.parse(message.offer);
+  if (message.message) {
+   let {offer} = JSON.parse(message.message);
    peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
    const answer = await peerConnection.createAnswer();
    await peerConnection.setLocalDescription(answer);
