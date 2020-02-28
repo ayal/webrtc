@@ -19,9 +19,9 @@ class SignalingChannel {
 }
 
 const signalingChannel = new SignalingChannel();
+const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] };
 
 async function makeCall() {
- const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] };
  const peerConnection = new RTCPeerConnection(configuration);
  signalingChannel.addEventListener('message', async message => {
   if (message.answer) {
