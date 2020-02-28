@@ -37,14 +37,14 @@ async function makeCall() {
  signalingChannel.send({ 'offer': JSON.stringify(offer)});
  
  peerConnection.addEventListener('icecandidate', event => {
-    console.log('ice', event);
+    console.log('ice call', event);
     if (event.candidate) {
         signalingChannel.send({'new-ice-candidate': event.candidate});
     }
   });
  
  peerConnection.addEventListener('connectionstatechange', event => {
-  console.log('connectionstatechange', event);
+  console.log('connectionstatechange call', event);
     if (peerConnection.connectionState === 'connected') {
         // Peers connected!
     }
@@ -65,6 +65,20 @@ async function wait() {
    }
   }
  });
+ 
+  peerConnection.addEventListener('icecandidate', event => {
+    console.log('ice call', event);
+    if (event.candidate) {
+        signalingChannel.send({'new-ice-candidate': event.candidate});
+    }
+  });
+ 
+ peerConnection.addEventListener('connectionstatechange', event => {
+  console.log('connectionstatechange call', event);
+    if (peerConnection.connectionState === 'connected') {
+        // Peers connected!
+    }
+  });
 }
 
 signalingChannel.addEventListener('message', async message => {
