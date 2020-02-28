@@ -85,7 +85,7 @@ async function wait() {
     let iceCandidate = JSON.parse(data.iceCandidate);
      await peerConnection.addIceCandidate(new RTCIceCandidate(iceCandidate));
    }
-    }
+    
   }
  });
 
