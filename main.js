@@ -22,6 +22,10 @@ const signalingChannel = new SignalingChannel();
 
 async function makeCall() {
  const peerConnection = new RTCPeerConnection();
+  let sendChannel = peerConnection.createDataChannel("sendChannel");
+  sendChannel.onopen = (e)=>console.log('open', e);
+  sendChannel.onclose = (e)=>console.log('close', e);
+ 
  signalingChannel.addEventListener('message', async message => {
   if (message.message) {
    let data = JSON.parse(message.message);
@@ -29,6 +33,10 @@ async function makeCall() {
     let answer = JSON.parse(data.answer);
     const remoteDesc = new RTCSessionDescription(answer);
     await peerConnection.setRemoteDescription(remoteDesc);
+    setTimeout(()=>{
+      console.log('trying to send something...');
+      sendChannel.send('HELOOOO');
+    })
    }
   }
  });
@@ -36,12 +44,9 @@ async function makeCall() {
  await peerConnection.setLocalDescription(offer);
  signalingChannel.send({ 'offer': JSON.stringify(offer)});
  
- peerConnection.addEventListener('icecandidate', event => {
-    console.log('ice call', event);
-    if (event.candidate) {
-        signalingChannel.send({'new-ice-candidate': event.candidate});
-    }
-  });
+  peerConnection.onicecandidate = e => !e.candidate
+        || remoteConnection.addIceCandidate(e.candidate)
+        .catch(handleAddCandidateError);
  
  peerConnection.addEventListener('connectionstatechange', event => {
   console.log('connectionstatechange call', event);
@@ -53,6 +58,13 @@ async function makeCall() {
 
 async function wait() {
  const peerConnection = new RTCPeerConnection();
+ 
+  remoteConnection.ondatachannel = (event)=>{
+    receiveChannel = event.channel;
+    receiveChannel.onmessage = (e)=>{console.log('on data message!', e)};
+    receiveChannel.onopen = (e)=>console.log('open', e);
+    receiveChannel.onclose = (e)=>console.log('close', e);
+  };
  signalingChannel.addEventListener('message', async message => {
   if (message.message) {
    let data = JSON.parse(message.message);
@@ -66,12 +78,9 @@ async function wait() {
   }
  });
  
-  peerConnection.addEventListener('icecandidate', event => {
-    console.log('ice call', event);
-    if (event.candidate) {
-        signalingChannel.send({'new-ice-candidate': event.candidate});
-    }
-  });
+   peerConnection.onicecandidate = e => !e.candidate
+        || remoteConnection.addIceCandidate(e.candidate)
+        .catch(handleAddCandidateError);
  
  peerConnection.addEventListener('connectionstatechange', event => {
   console.log('connectionstatechange call', event);
