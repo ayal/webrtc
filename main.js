@@ -19,10 +19,9 @@ class SignalingChannel {
 }
 
 const signalingChannel = new SignalingChannel();
-const configuration = { 'iceServers': [{ 'urls': 'stun:stun.l.google.com:19302' }] };
 
 async function makeCall() {
- const peerConnection = new RTCPeerConnection(configuration);
+ const peerConnection = new RTCPeerConnection();
  signalingChannel.addEventListener('message', async message => {
   if (message.message) {
    let data = JSON.parse(message.message);
@@ -53,7 +52,7 @@ async function makeCall() {
 }
 
 async function wait() {
- const peerConnection = new RTCPeerConnection(configuration);
+ const peerConnection = new RTCPeerConnection();
  signalingChannel.addEventListener('message', async message => {
   if (message.message) {
    let data = JSON.parse(message.message);
