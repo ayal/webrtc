@@ -79,19 +79,15 @@ async function wait() {
     await peerConnection.setLocalDescription(answer);
     signalingChannel.send({ 'answer': JSON.stringify(answer) });
    }
-  }
- });
- 
-  signalingChannel.addEventListener('message', async message => {
-    if (message.message) {
-   let data = JSON.parse(message.message);
    if (data.iceCandidate) {
     let iceCandidate = JSON.parse(data.iceCandidate);
      await peerConnection.addIceCandidate(iceCandidate);
     console.log('added ice to waiter');
    }
-    }
-   
+  }
+ });
+ 
+
 });
 
  
