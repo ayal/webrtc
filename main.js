@@ -44,9 +44,8 @@ async function makeCall() {
  await peerConnection.setLocalDescription(offer);
  signalingChannel.send({ 'offer': JSON.stringify(offer)});
  
-  peerConnection.onicecandidate = e => !e.candidate
-        || remoteConnection.addIceCandidate(e.candidate)
-        .catch(handleAddCandidateError);
+  peerConnection.onicecandidate = e => console.log('on ice');
+        
  
  peerConnection.addEventListener('connectionstatechange', event => {
   console.log('connectionstatechange call', event);
@@ -59,7 +58,7 @@ async function makeCall() {
 async function wait() {
  const peerConnection = new RTCPeerConnection();
  
-  remoteConnection.ondatachannel = (event)=>{
+  peerConnection.ondatachannel = (event)=>{
     receiveChannel = event.channel;
     receiveChannel.onmessage = (e)=>{console.log('on data message!', e)};
     receiveChannel.onopen = (e)=>console.log('open', e);
@@ -78,9 +77,8 @@ async function wait() {
   }
  });
  
-   peerConnection.onicecandidate = e => !e.candidate
-        || remoteConnection.addIceCandidate(e.candidate)
-        .catch(handleAddCandidateError);
+  peerConnection.onicecandidate = e => console.log('on ice');
+
  
  peerConnection.addEventListener('connectionstatechange', event => {
   console.log('connectionstatechange call', event);
