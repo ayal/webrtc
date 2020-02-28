@@ -47,10 +47,10 @@ async function wait() {
 }
 
 signalingChannel.addEventListener('message', async message => {
- if (message.data.wait) {
+ if (message.wait) {
   wait();
  }
- if (message.data.call) {
+ if (message.call) {
   makeCall();
  }
 });
