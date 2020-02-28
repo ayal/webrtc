@@ -14,7 +14,7 @@ class SignalingChannel {
 
  send(data) {
    console.log('sending data', data);
-   window.parent.postMessage(data);
+   window.parent.postMessage(data, '*');
  }
 }
 
