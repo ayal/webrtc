@@ -47,7 +47,7 @@ async function makeCall() {
   peerConnection.addEventListener('icecandidate', event => {
     if (event.candidate) {
         console.log('sending ice');
-        signalingChannel.send({'iceCandidate': event.candidate});
+        signalingChannel.send({'iceCandidate': JSON.parse(event.candidate)});
     }
 });
         
