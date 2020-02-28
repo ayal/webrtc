@@ -36,6 +36,20 @@ async function makeCall() {
  const offer = await peerConnection.createOffer();
  await peerConnection.setLocalDescription(offer);
  signalingChannel.send({ 'offer': JSON.stringify(offer)});
+ 
+ peerConnection.addEventListener('icecandidate', event => {
+    console.log('ice', event);
+    if (event.candidate) {
+        signalingChannel.send({'new-ice-candidate': event.candidate});
+    }
+  });
+ 
+ peerConnection.addEventListener('connectionstatechange', event => {
+  console.log('connectionstatechange', event);
+    if (peerConnection.connectionState === 'connected') {
+        // Peers connected!
+    }
+  });
 }
 
 async function wait() {
