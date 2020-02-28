@@ -28,7 +28,7 @@ async function makeCall() {
    let data = JSON.parse(message.message);
    if (data.answer) {
     let answer = JSON.parse(data.answer);
-    const remoteDesc = new RTCSessionDescription(data.answer);
+    const remoteDesc = new RTCSessionDescription(answer);
     await peerConnection.setRemoteDescription(remoteDesc);
    }
   }
