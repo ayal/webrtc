@@ -44,7 +44,12 @@ async function makeCall() {
  await peerConnection.setLocalDescription(offer);
  signalingChannel.send({ 'offer': JSON.stringify(offer)});
  
-  peerConnection.onicecandidate = e => console.log('on ice');
+  peerConnection.addEventListener('icecandidate', event => {
+    if (event.candidate) {
+        console.log('sending ice');
+        signalingChannel.send({'iceCandidate': event.candidate});
+    }
+});
         
  
  peerConnection.addEventListener('connectionstatechange', event => {
@@ -77,7 +82,17 @@ async function wait() {
   }
  });
  
-  peerConnection.onicecandidate = e => console.log('on ice');
+  signalingChannel.addEventListener('message', async message => {
+    if (message.message) {
+   let data = JSON.parse(message.message);
+   if (data.iceCandidate) {
+    let iceCandidate = JSON.parse(data.iceCandidate);
+     await peerConnection.addIceCandidate(message.iceCandidate);
+    console.log('added ice to waiter');
+   }
+    }
+   
+});
 
  
  peerConnection.addEventListener('connectionstatechange', event => {
