@@ -8,7 +8,7 @@ class SignalingChannel {
     }
    });
  }
- addEventListener(cb) {
+ addEventListener(type, cb) {
     this.listeners.push(cb);
  }
 
