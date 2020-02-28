@@ -87,7 +87,7 @@ async function wait() {
    let data = JSON.parse(message.message);
    if (data.iceCandidate) {
     let iceCandidate = JSON.parse(data.iceCandidate);
-     await peerConnection.addIceCandidate(message.iceCandidate);
+     await peerConnection.addIceCandidate(iceCandidate);
     console.log('added ice to waiter');
    }
     }
